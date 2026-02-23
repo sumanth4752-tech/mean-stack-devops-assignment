@@ -1,0 +1,61 @@
+version: '3.8'
+
+services:
+
+  mongodb:
+    image: mongo:6.0
+    container_name: mongodb
+    restart: unless-stopped
+    environment:
+      MONGO_INITDB_DATABASE: meandb
+    volumes:
+      - mongodb_data:/data/db
+    networks:
+      - mean-network
+
+  backend:
+    image: sumanth4752/mean-backend:latest
+    container_name: backend
+    restart: unless-stopped
+    environment:
+      MONGO_URI: mongodb://mongodb:27017/meandb
+      PORT: 3000
+      NODE_ENV: production
+    ports:
+      - "3000:3000"
+    depends_on:
+      - mongodb
+    networks:
+      - mean-network
+
+  frontend:
+    image: sumanth4752/mean-frontend:latest
+    container_name: frontend
+    restart: unless-stopped
+    ports:
+      - "4200:80"
+    depends_on:
+      - backend
+    networks:
+      - mean-network
+
+  nginx:
+    image: nginx:alpine
+    container_name: nginx-proxy
+    restart: unless-stopped
+    ports:
+      - "80:80"
+    volumes:
+      - ./nginx/nginx.conf:/etc/nginx/nginx.conf:ro
+    depends_on:
+      - frontend
+      - backend
+    networks:
+      - mean-network
+
+volumes:
+  mongodb_data:
+
+networks:
+  mean-network:
+    driver: bridge
