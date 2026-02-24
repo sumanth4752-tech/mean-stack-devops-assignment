@@ -15,6 +15,19 @@ jobs:
       - name: Checkout Code
         uses: actions/checkout@v4
 
+      - name: Debug - Check if secrets exist
+        run: |
+          if [ -z "${{ secrets.DOCKERHUB_USERNAME }}" ]; then
+            echo "❌ DOCKERHUB_USERNAME is EMPTY"
+          else
+            echo "✅ DOCKERHUB_USERNAME is SET"
+          fi
+          if [ -z "${{ secrets.DOCKERHUB_TOKEN }}" ]; then
+            echo "❌ DOCKERHUB_TOKEN is EMPTY"
+          else
+            echo "✅ DOCKERHUB_TOKEN is SET"
+          fi
+
       - name: Set up Docker Buildx
         uses: docker/setup-buildx-action@v3
 
