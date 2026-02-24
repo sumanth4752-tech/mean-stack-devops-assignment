@@ -1,3 +1,4 @@
 <<<<<<< HEAD
 >>>>>>> 729c93927696f6b85b50c999bf4357af2443b6dc
 fix secrets
+fix VM deploy
